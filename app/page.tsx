@@ -3,8 +3,7 @@
 import React, { useState, useEffect } from 'react';
 
 export default function Home() {
-  const [step, setStep] = useState<'gift' | 'celebration' | 'main'>('main');
-  const [loading, setLoading] = useState(true);
+  const [step, setStep] = useState<'gift' | 'celebration' | 'main'>('gift');
   const [balloons, setBalloons] = useState<{ id: number; left: number; color: string; delay: number; speed: number }[]>([]);
 
   // Form State
@@ -20,24 +19,7 @@ export default function Home() {
   const [inputMsg, setInputMsg] = useState('');
 
   // Read WhatsApp Number from .env.local
-  const sirWhatsApp = process.env.NEXT_PUBLIC_SIR_WHATSAPP_NUMBER || "923492584693";
-
-  // Check LocalStorage on initial load: sirf 1 baar Birthday Gift dikhane ke liye
-  useEffect(() => {
-    const hasSeen = localStorage.getItem('acc_has_seen_birthday');
-    if (!hasSeen) {
-      setStep('gift');
-    } else {
-      setStep('main');
-    }
-    setLoading(false);
-  }, []);
-
-  // Handle Double Tap on Gift Card
-  const handleOpenGift = () => {
-    localStorage.setItem('acc_has_seen_birthday', 'true'); // Forever mark as seen
-    setStep('celebration');
-  };
+  const sirWhatsApp = process.env.NEXT_PUBLIC_SIR_WHATSAPP_NUMBER || "923492584693"; // Default number if not set
 
   // Slow Motion Celebration Setup
   useEffect(() => {
@@ -85,14 +67,12 @@ export default function Home() {
     }
   };
 
-  if (loading) return null;
-
-  // 1. Double Tap Gift Screen (Sirf Pehli Baar Dikhne Ke Liye)
+  // 1. Double Tap Gift Screen
   if (step === 'gift') {
     return (
       <div
         className="fixed inset-0 bg-slate-950 flex flex-col items-center justify-center cursor-pointer select-none z-50 px-4"
-        onDoubleClick={handleOpenGift}
+        onDoubleClick={() => setStep('celebration')}
       >
         <div className="vip-card p-10 rounded-3xl text-center max-w-md w-full border border-amber-500/40 shadow-2xl animate-float hover-lift">
           <div className="text-7xl mb-4">🎁</div>
@@ -203,6 +183,63 @@ export default function Home() {
         </div>
       </section>
 
+      {/* SECTION: Why Choose ACC (Hover Lift Added to Each Card) */}
+      <section className="py-16 px-6 bg-slate-900/40 border-t border-slate-800/80">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-extrabold text-amber-400 mb-3">Why Choose ACC Coaching?</h2>
+            <p className="text-slate-400 max-w-xl mx-auto text-sm">We provide the best environment and conceptual learning for your child's bright future.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="vip-card p-6 rounded-2xl text-center hover-lift cursor-pointer">
+              <div className="text-4xl mb-3">👨‍🏫</div>
+              <h3 className="font-bold text-amber-400 mb-2">Expert Teachers</h3>
+              <p className="text-slate-300 text-xs leading-relaxed">Highly qualified faculty dedicated to concept clarity and academic growth.</p>
+            </div>
+
+            <div className="vip-card p-6 rounded-2xl text-center hover-lift cursor-pointer">
+              <div className="text-4xl mb-3">📚</div>
+              <h3 className="font-bold text-amber-400 mb-2">Complete Syllabus</h3>
+              <p className="text-slate-300 text-xs leading-relaxed">Full course coverage with regular revision and board pattern exam preparation.</p>
+            </div>
+
+            <div className="vip-card p-6 rounded-2xl text-center hover-lift cursor-pointer">
+              <div className="text-4xl mb-3">📝</div>
+              <h3 className="font-bold text-amber-400 mb-2">Weekly Tests</h3>
+              <p className="text-slate-300 text-xs leading-relaxed">Weekly testing system and monthly performance reports for parents.</p>
+            </div>
+
+            <div className="vip-card p-6 rounded-2xl text-center hover-lift cursor-pointer">
+              <div className="text-4xl mb-3">💡</div>
+              <h3 className="font-bold text-amber-400 mb-2">Personal Attention</h3>
+              <p className="text-slate-300 text-xs leading-relaxed">Small batch sizes ensuring individual guidance for every single student.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION: Location & Info Card */}
+      <section className="py-16 px-6 bg-slate-900/40 border-t border-slate-800">
+        <div className="max-w-4xl mx-auto vip-card p-8 rounded-3xl text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-6 hover-lift">
+          <div>
+            <h3 className="text-2xl font-bold text-amber-400 mb-2">Visit ACC Campus Today</h3>
+            <p className="text-slate-300 text-sm max-w-lg mb-2">
+              📍 <strong className="text-white">Location:</strong> Malir / Alameen City / ACC
+            </p>
+            <p className="text-slate-400 text-xs">
+              Admissions are currently OPEN for all batches. Contact us on WhatsApp or submit the form below for fast processing!
+            </p>
+          </div>
+          <a
+            href="#admission-form"
+            className="bg-amber-500 text-slate-950 font-bold px-6 py-3 rounded-xl whitespace-nowrap transition-all text-sm hover-lift"
+          >
+            Apply Now ➔
+          </a>
+        </div>
+      </section>
+
       {/* Admission Form Section */}
       <section id="admission-form" className="py-20 px-6 bg-slate-900/80 border-t border-slate-800">
         <div className="max-w-xl mx-auto vip-card p-8 md:p-10 rounded-3xl hover-lift">
@@ -252,6 +289,47 @@ export default function Home() {
           </form>
         </div>
       </section>
+
+      {/* Chatbot Widget */}
+      <div className="fixed bottom-6 right-6 z-50">
+        {!chatOpen ? (
+          <button
+            onClick={() => setChatOpen(true)}
+            className="bg-amber-500 text-slate-950 p-4 rounded-full shadow-2xl flex items-center justify-center font-bold text-xl transition-all hover-lift"
+          >
+            💬
+          </button>
+        ) : (
+          <div className="vip-card w-80 md:w-96 h-[450px] rounded-3xl shadow-2xl flex flex-col border border-amber-500/40 overflow-hidden">
+            <div className="bg-slate-900 px-4 py-3 border-b border-slate-800 flex justify-between items-center">
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="font-bold text-amber-400 text-sm">ACC Assistant</span>
+              </div>
+              <button onClick={() => setChatOpen(false)} className="text-slate-400 hover:text-white font-bold px-2">✕</button>
+            </div>
+            <div className="flex-1 p-4 overflow-y-auto space-y-3 text-sm">
+              {messages.map((m, idx) => (
+                <div key={idx} className={`flex ${m.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-[80%] px-4 py-2.5 rounded-2xl ${m.sender === 'user' ? 'bg-amber-500 text-slate-950 font-medium' : 'bg-slate-800 text-slate-200 border border-slate-700'}`}>
+                    {m.text}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <form onSubmit={handleSendMessage} className="p-3 bg-slate-900 border-t border-slate-800 flex space-x-2">
+              <input
+                type="text"
+                value={inputMsg}
+                onChange={e => setInputMsg(e.target.value)}
+                placeholder="Ask about classes or fees..."
+                className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-amber-500"
+              />
+              <button type="submit" className="bg-amber-500 hover:bg-amber-400 text-slate-950 px-4 py-2 rounded-xl text-xs font-bold">Send</button>
+            </form>
+          </div>
+        )}
+      </div>
 
       {/* Footer */}
       <footer className="bg-slate-950 border-t border-slate-900 py-8 px-6 text-center text-slate-400 text-sm">
