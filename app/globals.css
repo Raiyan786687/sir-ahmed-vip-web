@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .glow-text {
+    text-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+  }
+  .hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .hover-lift:hover {
+    transform: translateY(-5px);
+  }
+  .vip-card {
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(12px);
+  }
+}
