@@ -347,3 +347,20 @@ export default function Home() {
     </div>
   );
 }
+<style jsx global>{`
+  .vip-card {
+    background-color: rgba(15, 23, 42, 0.85) !important;
+    border: 1px solid rgba(245, 158, 11, 0.3) !important;
+    border-radius: 1.5rem !important;
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5) !important;
+  }
+  .hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+  }
+  .hover-lift:hover {
+    transform: translateY(-6px) !important;
+  }
+  .glow-text {
+    text-shadow: 0 0 15px rgba(245, 158, 11, 0.6) !important;
+  }
+`}</style>
